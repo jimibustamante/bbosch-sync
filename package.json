@@ -1,0 +1,46 @@
+{
+  "name": "bbosch",
+  "version": "1.0.0",
+  "description": "Bbosch integration with Zoho CRM.",
+  "main": "index.js",
+  "engines": {
+    "node": "^6.10.3"
+  },
+  "scripts": {
+    "start": "webpack -w",
+    "lint": "standard",
+    "test": "npm run lint && ava"
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jimibustamante/bbosch.git"
+  },
+  "author": "Jaime Bustamante <jimibustamante@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jimibustamante/bbosch/issues"
+  },
+  "homepage": "https://github.com/jimibustamante/bbosch#readme",
+  "devDependencies": {
+    "ava": "^0.19.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
+    "babel-plugin-transform-regenerator": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2016": "^6.24.1",
+    "babel-preset-es2017": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "dotenv": "^4.0.0",
+    "request-promise": "^4.2.1",
+    "standard": "^10.0.2",
+    "webpack": "^2.5.1"
+  }
+}
