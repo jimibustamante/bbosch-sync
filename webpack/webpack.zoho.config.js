@@ -2,7 +2,7 @@ const path = require('path')
 module.exports = {
   entry: ['babel-polyfill', path.resolve(__dirname, '../source/index.js')],
   output: {
-    filename: 'zoho.js',
+    filename: 'index.js',
     path: path.resolve(__dirname, '../build/'),
   },
   module: {

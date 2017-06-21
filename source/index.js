@@ -1,15 +1,38 @@
 import ZohoApi from './zoho.js'
 import MysqlClient from './mysql.js'
+import Client from './models/client.js'
 
 const api = new ZohoApi()
 const mysqlClient = new MysqlClient()
 async function run() {
-  // let contacts = await api.getContacts()
-  // console.log(contacts);
-  let bbosch = await mysqlClient.connect()
-  console.log(bbosch);
-  return bbosch
-}
-let bbosch = mysqlClient.connect()
+  console.log("RUN!");
+  let crmClients = await api.getAccounts()
+  let currentClients = setClientList(crmClients, 'crm')
+  console.log(currentClients)
+  // console.log(currentClients.map( c => {
+  //   return c['CoD SAP']
+  // }));
 
-// run()
+  
+  // let bbosch = await mysqlClient.connect()
+  // console.log("************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************");
+  // console.log(bbosch);
+  // let sapClients = setClientList(bbosch, 'sap')
+  // let conRut = sapClients.filter(c => { return c.rut.length > 2 })
+  // // console.log(sapClients);
+  // console.log(conRut);
+  // console.log(sapClients.length);
+  // console.log(conRut.length);
+
+  // console.log(sapClients);
+}
+
+function setClientList (clients, origin) {
+  let list = []
+  clients.forEach(client => {
+    list.push(new Client(client, origin))
+  })
+  return list
+}
+
+run()

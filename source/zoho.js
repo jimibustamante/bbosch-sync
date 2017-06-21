@@ -8,8 +8,10 @@ class ZohoApi {
     console.log('Constructor! ', API_KEY)
   }
 
-  async getContacts() {
-    let response = await request.get(`https://crm.zoho.com/crm/private/json/Contacts/getRecords?newFormat=1&authtoken=${API_KEY}&scope=crmapi&fromIndex=1&toIndex=200&selectColumns=All`)
+  async getAccounts() {
+    console.log("GET CLIENTS!");
+    let response = await request.get(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?newFormat=1&authtoken=${API_KEY}&scope=crmapi&fromIndex=1&toIndex=200&selectColumns=All`)
+    console.log(response);
     response = this.parseCrmResponse(response)
     return response
   }
@@ -17,7 +19,7 @@ class ZohoApi {
   parseCrmResponse(list) {
     list = JSON.parse(list)
     var studentList = [];
-    var elements = list['response']['result']['Contacts']['row'];
+    var elements = list['response']['result']['Accounts']['row'];
     _.each(elements, function (item) {
       var student = {};
       _.each(item['FL'], function (attr) {
