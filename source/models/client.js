@@ -12,6 +12,7 @@ class Client {
       this.agotamiento = params.CRAGO
     }
     if (origin === 'crm' || !origin) {
+      this.id = params['ACCOUNTID']
       this.codSap = params['CoD SAP']
       this.rut = params['RUT Cliente']
       this.creditoProduccion = params['Crédito en Producción']
@@ -20,6 +21,48 @@ class Client {
       this.creditoTotal = params['Comprometido total']
       this.agotamiento = params['Grado de agotamiento']
     }
+  }
+
+  buildUpdateXml() {
+    let xml = xmlBuilder.create({
+      'Accounts': {
+        'row': {
+          '@no': '1',
+          'FL': [
+            {
+              '@val': 'RUT Cliente',
+              '#text': this.rut.replace(' ', '')
+            },
+            {
+              '@val': 'CoD SAP',
+              '#text': this.codSap
+            },
+            {
+              '@val': 'Crédito en Producción',
+              '#text': this.creditoProduccion
+            },
+            {
+              '@val': 'Limite de Crédito',
+              '#text': this.limiteCredito
+            },
+            {
+              '@val': 'Crédito de facturas pp',
+              '#text': this.creditoDeFacturas
+            },
+            {
+              '@val': 'Comprometido total',
+              '#text': this.creditoTotal
+            },
+            {
+              '@val': 'Grado de agotamiento',
+              '#text': this.agotamiento
+            }
+          ]
+        }
+      }
+    });
+    return xml.end({ pretty: true }).replace('<?xml version="1.0"?>','')
+
   }
 
   buildCrmXml() {
@@ -68,7 +111,6 @@ class Client {
         }
       }
     });
-    // console.log(xml.end({ pretty: true }).replace('<?xml version="1.0"?>',''));
     return xml.end({ pretty: true }).replace('<?xml version="1.0"?>','')
   }
 

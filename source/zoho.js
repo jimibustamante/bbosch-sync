@@ -13,26 +13,21 @@ class ZohoApi {
     to = to || 200
     console.log("GET CLIENTS!");
     let response = await request.get(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?newFormat=1&authtoken=${API_KEY}&scope=crmapi&fromIndex=${from}&toIndex=${to}&selectColumns=All`)
-    // console.log(response);
     response = this.parseCrmResponse(response)
     return response
   }
 
   async insertCrmClient(client) {
-    console.log(client.buildCrmInsertClient())
-    var url = 'https://crm.zoho.com/crm/private/xml/Accounts/insertRecords?authtoken='+ API_KEY + '&scope=crmapi&newFormat=1&xmlData=' + client.buildCrmXml() + '&duplicateCheck=1';
+    console.log(client.buildCrmXml())
+    let url = 'https://crm.zoho.com/crm/private/xml/Accounts/insertRecords?authtoken='+ API_KEY + '&scope=crmapi&newFormat=1&xmlData=' + client.buildCrmXml() + '&duplicateCheck=1';
     let response = await request.get(url)
     console.log(response);
     return response
-    // request(url, function (error, response, body) {
-    //   // if (body.includes('Record(s) already exists')) {
-    //   //   console.log("RECORD ALREADY EXISTS!");
-    //   // }
-    // })
   }
 
   async updateCrmClient(client) {
-    var url = 'https://crm.zoho.com/crm/private/xml/Accounts/updateRecords?authtoken='+ API_KEY + '&scope=crmapi&newFormat=1&xmlData=' + client.buildCrmXml() + '&id=' + client.id;
+    console.log(client.buildUpdateXml())
+    let url = 'https://crm.zoho.com/crm/private/xml/Accounts/updateRecords?authtoken='+ API_KEY + '&scope=crmapi&newFormat=1&xmlData=' + client.buildUpdateXml() + '&id=' + client.id;
     let response = await request.get(url)
     console.log(response);
     return response

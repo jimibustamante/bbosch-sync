@@ -20,27 +20,28 @@ async function run() {
   console.log("CURRENT CRM CLIENTS: ", currentCrmClients.length)
 
   let bbosch = await mysqlClient.connect()
-  let sapClients = setClientList(bbosch, 'sap').filter(c => { return c.rut.length > 2 })
+  let sapClients = setClientList(bbosch, 'sap').filter(c => { return c.rut.match(/\b\d{1,8}\-[K|k|0-9]/) })
   let repeatedClients = sapClients.filter(client => {
-    if (client.rut.replace(' ', '')  === '4795643-9'){console.log(client.rut)}
-    let repeated =  currentCrmClients.find(c => { return c.rut === client.rut.replace(' ', '') || c.codSap === client.codSap})
+    let repeated =  currentCrmClients.find(c => { return c.rut === client.rut.replace(' ', '')})
     if (repeated) { return true}  else { return repeated }
   })
-  repeatedClients.forEach(client => {
+  let newClients = _.difference(sapClients, repeatedClients)
+  console.log("NEW CLIENTS: ", newClients.length)
+  console.log("TOTAL SAP CLIENTS: ", sapClients.length);
+  console.log("REPEATED: ", repeatedClients.length)
+
+  await api.insertCrmClient(_.sample(newClients))
+
+  await repeatedClients.forEach(async client => {
     let crmClient = currentCrmClients.find(c => { return c.rut === client.rut.replace(' ', '') })
     if (crmClient) {
       client.id = crmClient.id
-      // api.updateCrmClient(client)
+      console.log(client)
+      await api.updateCrmClient(client)
     }
   })
-  let validRutFiltered = sapClients.filter(client => {
-    return client.rut.match(/\b\d{1,8}\-[K|k|0-9]/)
-  })
-  console.log("VALIDATED RUT: ", validRutFiltered.length)
-  console.log("TOTAL SAP CLIENTS:", sapClients.length);
-  console.log("REPEATED: ", repeatedClients.length)
-  // console.log("TEST CLIENT: ", validRutFiltered[0]);
-  // await api.insertCrmClient(validRutFiltered[0])
+
+
 }
 
 
