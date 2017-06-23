@@ -19,7 +19,8 @@ class ZohoApi {
   }
 
   async insertCrmClient(client) {
-    var url = 'https://crm.zoho.com/crm/private/xml/Contacts/insertRecords?authtoken='+ API_KEY + '&scope=crmapi&newFormat=1&xmlData=' + client.buildCrmInsertClient() + '&duplicateCheck=1';
+    console.log(client.buildCrmInsertClient())
+    var url = 'https://crm.zoho.com/crm/private/xml/Accounts/insertRecords?authtoken='+ API_KEY + '&scope=crmapi&newFormat=1&xmlData=' + client.buildCrmInsertClient() + '&duplicateCheck=1';
     let response = await request.get(url)
     console.log(response);
     // request(url, function (error, response, body) {
@@ -30,7 +31,7 @@ class ZohoApi {
   }
 
   async updateCrmClient(umasStudent, crmStudent, id) {
-    var url = 'https://crm.zoho.com/crm/private/xml/Contacts/updateRecords?authtoken='+ API_KEY + '&scope=crmapi&newFormat=1&xmlData=' + buildCrmUpdateStudent(umasStudent, crmStudent) + '&id=' + id;
+    var url = 'https://crm.zoho.com/crm/private/xml/Accounts/updateRecords?authtoken='+ API_KEY + '&scope=crmapi&newFormat=1&xmlData=' + buildCrmUpdateStudent(umasStudent, crmStudent) + '&id=' + id;
     request(url, function (error, response, body) {
       // console.log(body);
     })

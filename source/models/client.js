@@ -30,7 +30,7 @@ class Client {
           'FL': [
             {
               '@val': 'RUT Cliente',
-              '#text': this.rut
+              '#text': this.rut.replace(' ', '')
             },
             {
               '@val': 'CoD SAP',
@@ -57,8 +57,12 @@ class Client {
               '#text': this.agotamiento
             },
             {
-              '@val': 'Colegio',
-              '#text': colegio
+              '@val': 'Account Owner',
+              '#text': 'Santiagosystems BBosch'
+            },
+            {
+              '@val': 'Account Name',
+              '#text': 'Test from SAP'
             }
           ]
         }

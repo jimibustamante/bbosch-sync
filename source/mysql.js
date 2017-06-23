@@ -24,7 +24,7 @@ class MysqlClient {
       debug: false,
       database: this.data.name
     })
-    console.log(connection);
+    // console.log(connection);
     // console.log(this.data);
     const [rows, fields]= await connection.execute('select * from tbl_int_cred');
     return rows
