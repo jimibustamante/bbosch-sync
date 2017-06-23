@@ -22,7 +22,7 @@ class Client {
     }
   }
 
-  buildCrmInsertClient() {
+  buildCrmXml() {
     let xml = xmlBuilder.create({
       'Accounts': {
         'row': {

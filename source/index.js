@@ -26,7 +26,13 @@ async function run() {
     let repeated =  currentCrmClients.find(c => { return c.rut === client.rut.replace(' ', '') || c.codSap === client.codSap})
     if (repeated) { return true}  else { return repeated }
   })
-
+  repeatedClients.forEach(client => {
+    let crmClient = currentCrmClients.find(c => { return c.rut === client.rut.replace(' ', '') })
+    if (crmClient) {
+      client.id = crmClient.id
+      // api.updateCrmClient(client)
+    }
+  })
   let validRutFiltered = sapClients.filter(client => {
     return client.rut.match(/\b\d{1,8}\-[K|k|0-9]/)
   })
