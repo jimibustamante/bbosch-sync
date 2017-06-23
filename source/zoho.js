@@ -8,26 +8,46 @@ class ZohoApi {
     console.log('Constructor! ', API_KEY)
   }
 
-  async getAccounts() {
+  async getAccounts(from, to) {
+    from = from || 1
+    to = to || 200
     console.log("GET CLIENTS!");
-    let response = await request.get(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?newFormat=1&authtoken=${API_KEY}&scope=crmapi&fromIndex=1&toIndex=200&selectColumns=All`)
-    console.log(response);
+    let response = await request.get(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?newFormat=1&authtoken=${API_KEY}&scope=crmapi&fromIndex=${from}&toIndex=${to}&selectColumns=All`)
+    // console.log(response);
     response = this.parseCrmResponse(response)
     return response
   }
 
+  async insertCrmClient(client) {
+    var url = 'https://crm.zoho.com/crm/private/xml/Contacts/insertRecords?authtoken='+ API_KEY + '&scope=crmapi&newFormat=1&xmlData=' + client.buildCrmInsertClient() + '&duplicateCheck=1';
+    let response = await request.get(url)
+    console.log(response);
+    // request(url, function (error, response, body) {
+    //   // if (body.includes('Record(s) already exists')) {
+    //   //   console.log("RECORD ALREADY EXISTS!");
+    //   // }
+    // })
+  }
+
+  async updateCrmClient(umasStudent, crmStudent, id) {
+    var url = 'https://crm.zoho.com/crm/private/xml/Contacts/updateRecords?authtoken='+ API_KEY + '&scope=crmapi&newFormat=1&xmlData=' + buildCrmUpdateStudent(umasStudent, crmStudent) + '&id=' + id;
+    request(url, function (error, response, body) {
+      // console.log(body);
+    })
+  }
+
   parseCrmResponse(list) {
     list = JSON.parse(list)
-    var studentList = [];
+    var clientList = [];
     var elements = list['response']['result']['Accounts']['row'];
     _.each(elements, function (item) {
-      var student = {};
+      var client = {};
       _.each(item['FL'], function (attr) {
-        student[attr.val] = attr.content;
+        client[attr.val] = attr.content;
       })
-      studentList.push(student);
+      clientList.push(client);
     })
-    return studentList;
+    return clientList;
   }
 }
 
