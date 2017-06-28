@@ -15,14 +15,14 @@ async function run() {
     from += 200
     to += 200
   } while (crmClients.length === 200);
-  console.log(_.first(crmClients))
-  console.log(_.first(currentCrmClients))
+  //console.log(crmClients)
+  //console.log(_.first(currentCrmClients))
   console.log("CURRENT CRM CLIENTS: ", currentCrmClients.length)
 
   let bbosch = await mysqlClient.connect()
   let sapClients = setClientList(bbosch, 'sap').filter(c => { return c.rut.match(/\b\d{1,8}\-[K|k|0-9]/) })
   let repeatedClients = sapClients.filter(client => {
-    let repeated =  currentCrmClients.find(c => { return c.rut === client.rut.replace(' ', '')})
+    let repeated =  currentCrmClients.find(c => { return c.rut === client.rut &&  client.codSap === c.codSap })
     if (repeated) { return true}  else { return repeated }
   })
   let newClients = _.difference(sapClients, repeatedClients)
@@ -33,14 +33,18 @@ async function run() {
   await api.insertCrmClient(_.sample(newClients))
 
   await repeatedClients.forEach(async client => {
-    let crmClient = currentCrmClients.find(c => { return c.rut === client.rut.replace(' ', '') })
-    if (crmClient) {
-      client.id = crmClient.id
-      console.log(client)
-      await api.updateCrmClient(client)
-    }
+    let crmClient = currentCrmClients.filter(c => { return c.rut === client.rut })
+    console.log("CRM CLIENTES FILTERED: ", crmClient.length)
+    crmClient.forEach(async zohoClient => {
+    if (zohoClient) {
+      client.id = zohoClient.id
+      client.ownerId = zohoClient.ownerId
+      //client.name = crmClient.name
+      //console.log(client)
+       await api.updateCrmClient(client)
+     }
+    })
   })
-
 
 }
 
