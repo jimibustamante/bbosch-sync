@@ -12,17 +12,13 @@ class ZohoApi {
     from = from || 1
     to = to || 200
     console.log("GET CLIENTS!");
-    console.log(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?version=2&newFormat=2&authtoken=${API_KEY}&scope=crmapi&fromIndex=${from}&toIndex=${to}&selectColumns=All`);
+    // console.log(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?version=2&newFormat=2&authtoken=${API_KEY}&scope=crmapi&fromIndex=${from}&toIndex=${to}&selectColumns=All`);
     let response = await request.get(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?newFormat=1&authtoken=${API_KEY}&scope=crmapi&fromIndex=${from}&toIndex=${to}&selectColumns=All`)
     response = this.parseCrmResponse(response)
     return response
   }
 
   async insertCrmClient(client) {
-    if (client.rut === '77880610-k') {
-      console.log('INSERT')
-      console.log(client.buildCrmXml())
-    }
     let url = encodeURI('https://crm.zoho.com/crm/private/xml/Accounts/insertRecords?authtoken='+ API_KEY + '&scope=crmapi&newFormat=1&xmlData=' + client.buildCrmXml() + '&duplicateCheck=1')
     let response = await request.get(url)
     console.log(response);
@@ -30,12 +26,12 @@ class ZohoApi {
   }
 
   async updateCrmClient(client) {
-    console.log(client);
+    // console.log(client);
     let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/updateRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${client.buildUpdateXml()}&id=${client.id}`)
     if (client.rut === '77880610-k' || client.rut === '4795643-9') {
       console.log('UPDATE')
     }
-    console.log(url)
+    // console.log(url)
     let response = await request.get(url)
     console.log(response)
     return response

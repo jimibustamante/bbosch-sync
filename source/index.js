@@ -15,7 +15,7 @@ async function run() {
     from += 200
     to += 200
   } while (crmClients.length === 200);
-  // console.log(crmClients)
+  // console.log(crmClients.map(c => {return c['Account Name']}))
 
   // console.log(_.first(currentCrmClients))
   console.log("CURRENT CRM CLIENTS: ", currentCrmClients.length)
@@ -30,8 +30,11 @@ async function run() {
   console.log("NEW CLIENTS: ", newClients.length)
   console.log("TOTAL SAP CLIENTS: ", sapClients.length);
   console.log("REPEATED: ", repeatedClients.length)
+  
 
-  await api.insertCrmClient(_.sample(newClients))
+  let newClient = _.sample(newClients)
+
+  await api.insertCrmClient(newClient)
   // console.log(currentCrmClients.forEach(c => { console.log(`|${c.rut}|`) }));
 
   // let testClients = currentCrmClients.filter(c => {
@@ -50,7 +53,7 @@ async function run() {
     if (zohoClient) {
       client.id = zohoClient.id
       client.ownerId = zohoClient.ownerId
-      //client.name = crmClient.name
+      client.name = zohoClient.name
       //console.log(client)
        await api.updateCrmClient(client)
      }

@@ -15,7 +15,7 @@ class Client {
       this.id = params['ACCOUNTID']
       this.codSap = params['CoD SAP']
       this.rut = params['RUT Cliente']
-      this.name = params['Account Name'] || ''
+      this.name = params['Account Name']
       this.creditoProduccion = params['Crédito en Producción']
       this.limiteCredito = params['Limite de Crédito']
       this.creditoDeFacturas = params['Crédito de facturas pp']
@@ -26,7 +26,6 @@ class Client {
   }
 
   buildUpdateXml() {
-    console.log("AAAAA");
     let xml = xmlBuilder.create({
       'Accounts': {
         'row': {
@@ -53,29 +52,17 @@ class Client {
               '#text': parseInt(this.limiteCredito) || 0
             },
             {
-              '@val': 'Crédito de facturas pp',
+              '@val': 'Crédito en Facturas PP',
               '#text': parseInt(this.creditoDeFacturas) || 0
             },
             {
-              '@val': 'Comprometido total',
+              '@val': 'Comprometido Total',
               '#text': parseInt(this.creditoTotal) || 0
             },
             {
-              '@val': 'Grado de agotamiento',
-              '#text': this.agotamiento || 0
+              '@val': 'Grado de Agotamiento',
+              '#text': parseInt(this.agotamiento) || 0
             },
-            // {
-            //   '@val': 'SMOWNERID',
-            //   '#text': this.ownerId
-            // },
-            // {
-            //   '@val': 'ACCOUNTID',
-            //   '#text': this.id
-            // }
-            // {
-            //   '@val': 'Id',
-            //   '#text': this.id
-            // }
           ]
         }
       }
@@ -107,16 +94,16 @@ class Client {
               '#text': parseInt(this.limiteCredito)
             },
             {
-              '@val': 'Crédito de facturas pp',
+              '@val': 'Crédito de Facturas PP',
               '#text': parseInt(this.creditoDeFacturas)
             },
             {
-              '@val': 'Comprometido total',
+              '@val': 'Comprometido Total',
               '#text': parseInt(this.creditoTotal)
             },
             {
-              '@val': 'Grado de agotamiento',
-              '#text': this.agotamiento
+              '@val': 'Grado de Agotamiento',
+              '#text': parseInt(this.agotamiento)
             },
             {
               '@val': 'Account Owner',
@@ -124,7 +111,7 @@ class Client {
             },
             {
               '@val': 'Account Name',
-              '#text': 'Test from SAP'
+              '#text': `From Sap ${this.rut}`
             }
           ]
         }
