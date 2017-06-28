@@ -24,17 +24,8 @@ class MysqlClient {
       debug: false,
       database: this.data.name
     })
-    // console.log(connection);
-    // console.log(this.data);
     const [rows, fields]= await connection.execute('select * from tbl_int_cred');
     return rows
-    // let clients = await connection.query('select * from tbl_int_cred', function (error, results, fields) {
-    //   if (error) throw error;
-    //   // console.log('The solution is: ', results);
-    //   // console.log('The fields is: ', fields);
-    //   return results
-    // });
-    // return clients
   }
 
   disconnet() {

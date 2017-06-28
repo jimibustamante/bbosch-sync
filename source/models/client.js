@@ -15,7 +15,7 @@ class Client {
       this.id = params['ACCOUNTID']
       this.codSap = params['CoD SAP']
       this.rut = params['RUT Cliente']
-      this.name = params['Nombre de Cliente'] || ''
+      this.name = params['Account Name'] || ''
       this.creditoProduccion = params['Crédito en Producción']
       this.limiteCredito = params['Limite de Crédito']
       this.creditoDeFacturas = params['Crédito de facturas pp']
@@ -26,6 +26,7 @@ class Client {
   }
 
   buildUpdateXml() {
+    console.log("AAAAA");
     let xml = xmlBuilder.create({
       'Accounts': {
         'row': {
@@ -40,33 +41,41 @@ class Client {
               '#text': this.codSap
             },
             {
+              '@val': 'Account Name',
+              '#text': this.name
+            },
+            {
               '@val': 'Crédito en Producción',
-              '#text': this.creditoProduccion
+              '#text': this.creditoProduccion || 0
             },
             {
               '@val': 'Limite de Crédito',
-              '#text': parseInt(this.limiteCredito)
+              '#text': parseInt(this.limiteCredito) || 0
             },
             {
               '@val': 'Crédito de facturas pp',
-              '#text': parseInt(this.creditoDeFacturas)
+              '#text': parseInt(this.creditoDeFacturas) || 0
             },
             {
               '@val': 'Comprometido total',
-              '#text': parseInt(this.creditoTotal)
+              '#text': parseInt(this.creditoTotal) || 0
             },
             {
               '@val': 'Grado de agotamiento',
-              '#text': this.agotamiento
+              '#text': this.agotamiento || 0
             },
-            {
-              '@val': 'SMOWNERID',
-              '#text': this.ownerId
-            },
-            {
-              '@val': 'Id',
-              '#text': this.id
-            }
+            // {
+            //   '@val': 'SMOWNERID',
+            //   '#text': this.ownerId
+            // },
+            // {
+            //   '@val': 'ACCOUNTID',
+            //   '#text': this.id
+            // }
+            // {
+            //   '@val': 'Id',
+            //   '#text': this.id
+            // }
           ]
         }
       }

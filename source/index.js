@@ -15,8 +15,9 @@ async function run() {
     from += 200
     to += 200
   } while (crmClients.length === 200);
-  //console.log(crmClients)
-  //console.log(_.first(currentCrmClients))
+  // console.log(crmClients)
+
+  // console.log(_.first(currentCrmClients))
   console.log("CURRENT CRM CLIENTS: ", currentCrmClients.length)
 
   let bbosch = await mysqlClient.connect()
@@ -31,6 +32,16 @@ async function run() {
   console.log("REPEATED: ", repeatedClients.length)
 
   await api.insertCrmClient(_.sample(newClients))
+  // console.log(currentCrmClients.forEach(c => { console.log(`|${c.rut}|`) }));
+
+  // let testClients = currentCrmClients.filter(c => {
+  //   // console.log(c.rut);
+  //   return c.rut === '4795643-9'
+  // })
+  // console.log(testClients.length);
+  // testClients.forEach(async c => {
+  //   await api.updateCrmClient(c)
+  // })
 
   await repeatedClients.forEach(async client => {
     let crmClient = currentCrmClients.filter(c => { return c.rut === client.rut })
