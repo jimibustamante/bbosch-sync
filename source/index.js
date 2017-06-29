@@ -30,10 +30,10 @@ async function run() {
   console.log("NEW CLIENTS: ", newClients.length)
   console.log("TOTAL SAP CLIENTS: ", sapClients.length);
   console.log("REPEATED: ", repeatedClients.length)
-  
+
 
   let newClientTestList = _.sample(newClients, 1000)
-  newClientTestList.forEach(async  c => { 
+  newClientTestList.forEach(async  c => {
     await api.insertCrmClient(c)
   })
   // console.log(currentCrmClients.forEach(c => { console.log(`|${c.rut}|`) }));
@@ -46,6 +46,8 @@ async function run() {
   // testClients.forEach(async c => {
   //   await api.updateCrmClient(c)
   // })
+
+  await api.updateClientList(repeatedClients)
 
   await repeatedClients.forEach(async client => {
     let crmClient = currentCrmClients.filter(c => { return c.rut === client.rut })

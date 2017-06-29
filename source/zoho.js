@@ -45,10 +45,11 @@ class ZohoApi {
       let xml = buildUpdateListXml(toUpdateList)
       let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/updateRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${xml}&version=4`)
       console.log(url);
-
+      toUpdateList.forEach(c => { c.updated = true })
+      console.log(toUpdateList.length);
+      // let response = await request.get(url)
+      // console.log(response);
     } while (toUpdateList.length === 100);
-    // let response = await request.get(url)
-    // return response
   }
 
   buildUpdateListXml(list) {
