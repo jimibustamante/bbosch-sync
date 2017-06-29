@@ -68,9 +68,8 @@ class Client {
       }
     });
     return xml.end().replace('<?xml version="1.0"?>','')
-
   }
-
+  
   buildCrmXml() {
     let xml = xmlBuilder.create({
       'Accounts': {
