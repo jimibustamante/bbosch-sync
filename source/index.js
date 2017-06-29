@@ -32,10 +32,10 @@ async function run() {
   console.log("REPEATED: ", repeatedClients.length)
 
 
-  let newClientTestList = _.sample(newClients, 1000)
-  newClientTestList.forEach(async  c => {
-    await api.insertCrmClient(c)
-  })
+  //let newClientTestList = _.sample(newClients, 1000)
+  //newClientTestList.forEach(async  c => {
+  //  await api.insertCrmClient(c)
+  //})
   // console.log(currentCrmClients.forEach(c => { console.log(`|${c.rut}|`) }));
 
   // let testClients = currentCrmClients.filter(c => {
@@ -47,9 +47,7 @@ async function run() {
   //   await api.updateCrmClient(c)
   // })
 
-  await api.updateClientList(repeatedClients)
-
-  await repeatedClients.forEach(async client => {
+  repeatedClients.forEach( client => {
     let crmClient = currentCrmClients.filter(c => { return c.rut === client.rut })
     console.log("CRM CLIENTES FILTERED: ", crmClient.length)
     crmClient.forEach(async zohoClient => {
@@ -57,11 +55,13 @@ async function run() {
       client.id = zohoClient.id
       client.ownerId = zohoClient.ownerId
       client.name = zohoClient.name
-      //console.log(client)
-       await api.updateCrmClient(client)
+      // console.log(client)
+      // await api.updateCrmClient(client)
      }
     })
   })
+
+  await api.updateClientList(repeatedClients)
 
 }
 

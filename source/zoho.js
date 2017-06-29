@@ -40,77 +40,38 @@ class ZohoApi {
   }
 
   async updateClientList(list) {
+    let toUpdateList
     do {
-      let toUpdateList = _.first(list.filter(c => {return !c.updated}), 100)
-      let xml = buildUpdateListXml(toUpdateList)
+      toUpdateList = _.first(list.filter(c => {return !c.updated}), 10)
+      let xml = this.buildUpdateListXml(toUpdateList)
       let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/updateRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${xml}&version=4`)
-      console.log(url);
+      // console.log(url);
       toUpdateList.forEach(c => { c.updated = true })
       console.log(toUpdateList.length);
-      // let response = await request.get(url)
-      // console.log(response);
-    } while (toUpdateList.length === 100);
+      let response = await request.get(url)
+      console.log(response);
+    } while (toUpdateList.length === 10);
   }
 
   buildUpdateListXml(list) {
     let xml = xmlBuilder.create('Accounts')
     let i = 1
     list.forEach(client => {
-      let item = xmlBuilder.create('row').attr('no', i)
-      .ele('FL').attr('id', this.id)
-      .ele('FL').attr('RUT Cliente', this.rut)
-      .ele('FL').attr('Cod SAP', this.codSap)
-      .ele('FL').attr('Account Name', this.name)
-      .ele('FL').attr('Crédito en Producción', this.creditoProduccion || 0)
-      .ele('FL').attr('Limite de Crédito', this.limiteCredito || 0)
-      .ele('FL').attr('Crédito en Facturas PP', this.creditoDeFacturas || 0)
-      .ele('FL').attr('Comprometido Total', this.creditoTotal || 0)
-      .ele('FL').attr('Grado de Agotamiento', this.agotamiento || 0)
-      xml.importDocument(item)
+      let row = xml.ele('row')
+      row.att('no', i)
+      row.ele('FL', {'val': 'Id'}, client.id)
+      row.ele('FL', {'val': 'RUT Cliente'}, client.rut)
+      row.ele('FL', {'val': 'Cod SAP'}, client.codSap)
+      row.ele('FL', {'val': 'Account Name'}, client.name)
+      row.ele('FL', {'val': 'Crédito en Producción'}, client.creditoProduccion || 0)
+      row.ele('FL', {'val': 'Limite de Crédito'}, client.limiteCredito || 0)
+      row.ele('FL', {'val': 'Crédito en Facturas PP'}, client.creditoDeFacturas || 0)
+      row.ele('FL', {'val': 'Comprometido Total'}, client.creditoTotal || 0)
+      row.ele('FL', {'val': 'Grado de Agotamiento'}, parseInt(client.agotamiento) || 0)
+      i += 1 
     })
+    console.log(xml.end({ pretty: true }))
     return xml.end().replace('<?xml version="1.0"?>','')
-
-  //   'Accounts': {
-  //     'row': {
-  //       '@no': '1',
-  //       'FL': [
-  //         {
-  //           '@val': 'RUT Cliente',
-  //           '#text': this.rut
-  //         },
-  //         {
-  //           '@val': 'CoD SAP',
-  //           '#text': this.codSap
-  //         },
-  //         {
-  //           '@val': 'Account Name',
-  //           '#text': this.name
-  //         },
-  //         {
-  //           '@val': 'Crédito en Producción',
-  //           '#text': this.creditoProduccion || 0
-  //         },
-  //         {
-  //           '@val': 'Limite de Crédito',
-  //           '#text': parseInt(this.limiteCredito) || 0
-  //         },
-  //         {
-  //           '@val': 'Crédito en Facturas PP',
-  //           '#text': parseInt(this.creditoDeFacturas) || 0
-  //         },
-  //         {
-  //           '@val': 'Comprometido Total',
-  //           '#text': parseInt(this.creditoTotal) || 0
-  //         },
-  //         {
-  //           '@val': 'Grado de Agotamiento',
-  //           '#text': parseInt(this.agotamiento) || 0
-  //         },
-  //       ]
-  //     }
-  //   }
-  // });
-  // return xml.end().replace('<?xml version="1.0"?>','')
 
   }
 
