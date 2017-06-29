@@ -27,6 +27,20 @@ class ZohoApi {
     return response
   }
 
+  async insertClientList(list) {
+    let toInsertList
+    do {
+      toInsertList = _.first(list.filter(c => {return !c.updated}), 10)
+      let xml = this.buildInsertListXml(toInsertList)
+      let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/insertRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${xml}&version=4&duplicateCheck=1`)
+      // console.log(url);
+      toInsertList.forEach(c => { c.updated = true })
+      console.log(toInsertList.length);
+      let response = await request.get(url)
+      console.log(response);
+    } while (toInsertList.length === 10);
+  }
+
   async updateCrmClient(client) {
     // console.log(client);
     let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/updateRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${client.buildUpdateXml()}&id=${client.id}`)
@@ -53,6 +67,28 @@ class ZohoApi {
     } while (toUpdateList.length === 10);
   }
 
+  buildInsertListXml(list) {
+    let xml = xmlBuilder.create('Accounts')
+    let i = 1
+    list.forEach(client => {
+      let row = xml.ele('row')
+      row.att('no', i)
+      row.ele('FL', {'val': 'RUT Cliente'}, client.rut)
+      row.ele('FL', {'val': 'Cod SAP'}, client.codSap)
+      row.ele('FL', {'val': 'Account Name'}, `From Sap ${client.rut}`)
+      row.ele('FL', {'val': 'Account Owner'}, 'Santiagosystems BBosch')
+      row.ele('FL', {'val': 'Crédito en Producción'}, client.creditoProduccion || 0)
+      row.ele('FL', {'val': 'Limite de Crédito'}, client.limiteCredito || 0)
+      row.ele('FL', {'val': 'Crédito en Facturas PP'}, client.creditoDeFacturas || 0)
+      row.ele('FL', {'val': 'Comprometido Total'}, client.creditoTotal || 0)
+      row.ele('FL', {'val': 'Grado de Agotamiento'}, parseInt(client.agotamiento) || 0)
+
+      i += 1
+    })
+    console.log(xml.end({ pretty: true }))
+    return xml.end().replace('<?xml version="1.0"?>','')
+  }
+
   buildUpdateListXml(list) {
     let xml = xmlBuilder.create('Accounts')
     let i = 1
@@ -68,11 +104,10 @@ class ZohoApi {
       row.ele('FL', {'val': 'Crédito en Facturas PP'}, client.creditoDeFacturas || 0)
       row.ele('FL', {'val': 'Comprometido Total'}, client.creditoTotal || 0)
       row.ele('FL', {'val': 'Grado de Agotamiento'}, parseInt(client.agotamiento) || 0)
-      i += 1 
+      i += 1
     })
-    console.log(xml.end({ pretty: true }))
+    // console.log(xml.end({ pretty: true }))
     return xml.end().replace('<?xml version="1.0"?>','')
-
   }
 
   parseCrmResponse(list) {
