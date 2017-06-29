@@ -32,9 +32,10 @@ async function run() {
   console.log("REPEATED: ", repeatedClients.length)
   
 
-  let newClient = _.sample(newClients)
-
-  await api.insertCrmClient(newClient)
+  let newClientTestList = _.sample(newClients, 1000)
+  newClientTestList.forEach(async  c => { 
+    await api.insertCrmClient(c)
+  })
   // console.log(currentCrmClients.forEach(c => { console.log(`|${c.rut}|`) }));
 
   // let testClients = currentCrmClients.filter(c => {

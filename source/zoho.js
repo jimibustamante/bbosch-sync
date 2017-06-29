@@ -33,7 +33,7 @@ class ZohoApi {
     }
     // console.log(url)
     let response = await request.get(url)
-    console.log(response)
+    //console.log(response)
     return response
   }
 
