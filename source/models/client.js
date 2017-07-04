@@ -77,6 +77,30 @@ class Client {
               '@val': 'Grado de Agotamiento',
               '#text': parseInt(this.agotamiento) || 0
             },
+            {
+              '@val': 'Todas las sociedades',
+              '#text': this.sociedades
+            },
+            {
+              '@val': 'Pedidos',
+              '#text': this.pedidos
+            },
+            {
+              '@val': 'Entregas',
+              '#text': this.entregas
+            },
+            {
+              '@val': 'Facturación',
+              '#text': this.facturacion
+            },
+            {
+              '@val': 'Condiciones de pago',
+              '#text': this.condicionesPago
+            },
+            // {
+            //   '@val': 'Texto condiciones de pago',
+            //   '#text': this.texto
+            // },
           ]
         }
       }
