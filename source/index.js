@@ -14,7 +14,7 @@ async function syncClients() {
     currentCrmClients = _.union(currentCrmClients, setClientList(crmClients, 'crm'))
     from += 200
     to += 200
-  } while (crmClients.length === 200);
+  } while (crmClients.length !== 200);
   // console.log(crmClients.map(c => {return c['Account Name']}))
 
   // console.log(_.first(currentCrmClients))
@@ -23,9 +23,16 @@ async function syncClients() {
   let bboschClients = await mysqlClient.getClients()
   let bboschLocks = await mysqlClient.getLocks()
   let sapClients = setClientList(bboschClients, 'sap').filter(c => { return c.rut.match(/\b\d{1,8}\-[K|k|0-9]/) })
-  sapClients.forEach(c => {
-    
+  bboschLocks.forEach(lock => {
+    let rut = lock['STCD1']
+    let client = sapClients.find(c => { return c.rut === rut })
+    if (client) {
+      console.log("ADDING LOCK TO CLIENT!")
+      client.setLock(lock)
+      console.log(client)
+    }
   })
+
   let repeatedClients = sapClients.filter(client => {
     let repeated =  currentCrmClients.find(c => { return c.rut === client.rut })
     if (repeated) { return true }  else { return repeated }

@@ -16,7 +16,7 @@ class MysqlClient {
   }
 
   async connect() {
-    const connection = await mysql.createConnection({
+    let connection = await mysql.createConnection({
       host: this.data.host,
       port: this.data.port,
       user: this.data.user,
@@ -24,24 +24,23 @@ class MysqlClient {
       debug: false,
       database: this.data.name
     })
+    return connection
   }
 
-  async getClient() {
-    if (!connection) { await this.connect() }
+  async getClients() { 
+    let connection = await this.connect()
     let [rows, fields] = await connection.execute('select * from tbl_int_credito');
+    connection.end()
     return rows
   }
 
   async getLocks() {
-    if (!connection) { await this.connect() }
+    let connection = await this.connect()
     let [rows, fields] = await connection.execute('select * from tbl_int_bloqueo');
     console.log(rows);
     return rows
   }
 
-  disconnet() {
-    connection.end()
-  }
 }
 
 
