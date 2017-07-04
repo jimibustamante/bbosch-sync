@@ -10,6 +10,9 @@ class Client {
       this.creditoDeFacturas = params.CRTOT
       this.creditoTotal = params.CRCOM
       this.agotamiento = params.CRAGO
+      if (params.STCD1.replace(' ', '') === '96542940-9') {
+        console.log(params)
+      }
     }
     if (origin === 'crm' || !origin) {
       this.id = params['ACCOUNTID']
@@ -102,7 +105,7 @@ class Client {
             },
             {
               '@val': 'Grado de Agotamiento',
-              '#text': parseInt(this.agotamiento)
+              '#text': this.agotamiento
             },
             {
               '@val': 'Account Owner',

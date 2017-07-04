@@ -33,23 +33,15 @@ class ZohoApi {
       toInsertList = _.first(list.filter(c => {return !c.updated}), 10)
       let xml = this.buildInsertListXml(toInsertList)
       let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/insertRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${xml}&version=4&duplicateCheck=1`)
-      // console.log(url);
       toInsertList.forEach(c => { c.updated = true })
-      console.log(toInsertList.length);
       let response = await request.get(url)
       console.log(response);
     } while (toInsertList.length === 10);
   }
 
   async updateCrmClient(client) {
-    // console.log(client);
     let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/updateRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${client.buildUpdateXml()}&id=${client.id}`)
-    if (client.rut === '77880610-k' || client.rut === '4795643-9') {
-      console.log('UPDATE')
-    }
-    // console.log(url)
     let response = await request.get(url)
-    //console.log(response)
     return response
   }
 
@@ -59,9 +51,7 @@ class ZohoApi {
       toUpdateList = _.first(list.filter(c => {return !c.updated}), 10)
       let xml = this.buildUpdateListXml(toUpdateList)
       let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/updateRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${xml}&version=4`)
-      // console.log(url);
       toUpdateList.forEach(c => { c.updated = true })
-      console.log(toUpdateList.length);
       let response = await request.get(url)
       console.log(response);
     } while (toUpdateList.length === 10);
@@ -85,7 +75,6 @@ class ZohoApi {
 
       i += 1
     })
-    console.log(xml.end({ pretty: true }))
     return xml.end().replace('<?xml version="1.0"?>','')
   }
 
@@ -93,6 +82,9 @@ class ZohoApi {
     let xml = xmlBuilder.create('Accounts')
     let i = 1
     list.forEach(client => {
+      if (client.rut === "96542940-9") {
+        console.log(client.rut)
+      }
       let row = xml.ele('row')
       row.att('no', i)
       row.ele('FL', {'val': 'Id'}, client.id)
@@ -106,7 +98,6 @@ class ZohoApi {
       row.ele('FL', {'val': 'Grado de Agotamiento'}, parseInt(client.agotamiento) || 0)
       i += 1
     })
-    // console.log(xml.end({ pretty: true }))
     return xml.end().replace('<?xml version="1.0"?>','')
   }
 

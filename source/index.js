@@ -23,8 +23,12 @@ async function run() {
   let bbosch = await mysqlClient.connect()
   let sapClients = setClientList(bbosch, 'sap').filter(c => { return c.rut.match(/\b\d{1,8}\-[K|k|0-9]/) })
   let repeatedClients = sapClients.filter(client => {
-    let repeated =  currentCrmClients.find(c => { return c.rut === client.rut &&  client.codSap === c.codSap })
-    if (repeated) { return true}  else { return repeated }
+    if (client.rut === "96542940-9") {
+      console.log("USUARIO ENCONTRADO!")
+      console.log(client) 
+    }  
+    let repeated =  currentCrmClients.find(c => { return c.rut === client.rut })
+    if (repeated) { return true }  else { return repeated }
   })
   let newClients = _.difference(sapClients, repeatedClients)
   console.log("NEW CLIENTS: ", newClients.length)
@@ -32,20 +36,8 @@ async function run() {
   console.log("REPEATED: ", repeatedClients.length)
 
 
-  //let newClientTestList = _.sample(newClients, 1000)
-  //newClientTestList.forEach(async  c => {
-  //  await api.insertCrmClient(c)
-  //})
-  // console.log(currentCrmClients.forEach(c => { console.log(`|${c.rut}|`) }));
-
-  // let testClients = currentCrmClients.filter(c => {
-  //   // console.log(c.rut);
-  //   return c.rut === '4795643-9'
-  // })
-  // console.log(testClients.length);
-  // testClients.forEach(async c => {
-  //   await api.updateCrmClient(c)
-  // })
+  //console.log("\nSTARTING TO INSERT NEW CLIENTS")
+  //await api.insertClientList(newClients)
 
   repeatedClients.forEach( client => {
     let crmClient = currentCrmClients.filter(c => { return c.rut === client.rut })
@@ -55,16 +47,16 @@ async function run() {
       client.id = zohoClient.id
       client.ownerId = zohoClient.ownerId
       client.name = zohoClient.name
-      // console.log(client)
-      // await api.updateCrmClient(client)
      }
     })
   })
 
+
+  console.log("\nSTARTING TO UPDATE EXISTING CLIENTS")
   await api.updateClientList(repeatedClients)
+  console.log("\nUPDATE ENDED")
 
 }
-
 
 function setClientList (clients, origin) {
   let list = []
