@@ -28,6 +28,17 @@ class Client {
     }
   }
 
+  setLock(lock) {
+    console.log(lock);
+    this.sociedades = lock['SPERR']
+    this.pedidos = lock['AUFSD']
+    this.entregas = lock['LIFSD']
+    this.facturacion = lock['FAKSD']
+    this.condicionesPago = lock['ZTERM']
+    this.texto = lock['TEXT1']
+
+  }
+
   buildUpdateXml() {
     let xml = xmlBuilder.create({
       'Accounts': {
@@ -72,7 +83,7 @@ class Client {
     });
     return xml.end().replace('<?xml version="1.0"?>','')
   }
-  
+
   buildCrmXml() {
     let xml = xmlBuilder.create({
       'Accounts': {

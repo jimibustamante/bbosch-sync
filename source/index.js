@@ -2,10 +2,10 @@ import ZohoApi from './zoho.js'
 import MysqlClient from './mysql.js'
 import Client from './models/client.js'
 const _ = require('underscore-node')
-
 const api = new ZohoApi()
 const mysqlClient = new MysqlClient()
-async function run() {
+
+async function syncClients() {
   console.log("RUN!");
   let crmClients, currentCrmClients = [], from = 1, to = 200
   // Geting all clients. Api suports 200 rows per request
@@ -20,13 +20,13 @@ async function run() {
   // console.log(_.first(currentCrmClients))
   console.log("CURRENT CRM CLIENTS: ", currentCrmClients.length)
 
-  let bbosch = await mysqlClient.connect()
-  let sapClients = setClientList(bbosch, 'sap').filter(c => { return c.rut.match(/\b\d{1,8}\-[K|k|0-9]/) })
+  let bboschClients = await mysqlClient.getClients()
+  let bboschLocks = await mysqlClient.getLocks()
+  let sapClients = setClientList(bboschClients, 'sap').filter(c => { return c.rut.match(/\b\d{1,8}\-[K|k|0-9]/) })
+  sapClients.forEach(c => {
+    
+  })
   let repeatedClients = sapClients.filter(client => {
-    if (client.rut === "96542940-9") {
-      console.log("USUARIO ENCONTRADO!")
-      console.log(client) 
-    }  
     let repeated =  currentCrmClients.find(c => { return c.rut === client.rut })
     if (repeated) { return true }  else { return repeated }
   })
@@ -66,4 +66,8 @@ function setClientList (clients, origin) {
   return list
 }
 
-run()
+async syncLocks => {
+
+}
+
+syncClients()
