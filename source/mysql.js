@@ -37,7 +37,6 @@ class MysqlClient {
   async getLocks() {
     let connection = await this.connect()
     let [rows, fields] = await connection.execute('select * from tbl_int_bloqueo');
-    console.log(rows);
     connection.end()
     return rows
   }
@@ -45,7 +44,6 @@ class MysqlClient {
   async getKpis() {
     let connection = await this.connect()
     let [rows, fields] = await connection.execute('select * from tbl_int_kpi');
-    console.log(rows);
     connection.end()
     return rows
   }

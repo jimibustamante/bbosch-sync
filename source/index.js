@@ -6,7 +6,7 @@ const api = new ZohoApi()
 const mysqlClient = new MysqlClient()
 
 async function syncClients() {
-  console.log("RUN!");
+  console.log("Start fetching CRM Clients...");
   let crmClients, currentCrmClients = [], from = 1, to = 200
   // Geting all clients. Api suports 200 rows per request
   do {
@@ -15,32 +15,32 @@ async function syncClients() {
     from += 200
     to += 200
   } while (crmClients.length !== 200);
-  // console.log(crmClients.map(c => {return c['Account Name']}))
 
-  // console.log(_.first(currentCrmClients))
   console.log("CURRENT CRM CLIENTS: ", currentCrmClients.length)
 
+  console.log('\nFetching Clients...');
   let bboschClients = await mysqlClient.getClients()
+  console.log('\nFetching Locks...');
   let bboschLocks = await mysqlClient.getLocks()
+  console.log('\nFetching KPIs...');
   let bboschKpis = await mysqlClient.getKpis()
   let sapClients = setClientList(bboschClients, 'sap').filter(c => { return c.rut.match(/\b\d{1,8}\-[K|k|0-9]/) })
+
+  console.log('\nLocks merge...');
   bboschLocks.forEach(lock => {
     let rut = lock['STCD1']
     let client = sapClients.find(c => { return c.rut === rut })
     if (client) {
-      console.log("ADDING LOCK TO CLIENT!")
       client.setLock(lock)
-      console.log(client)
     }
   })
 
+  console.log('\nKPIs merge...');
   bboschKpis.forEach(kpi => {
     let rut = kpi['STCD1']
     let client = sapClients.find(c => { return c.rut === rut })
     if (client) {
-      console.log("ADDING KPI TO CLIENT!")
       client.setKpi(kpi)
-      console.log(client)
     }
   })
 
@@ -49,13 +49,13 @@ async function syncClients() {
     if (repeated) { return true }  else { return repeated }
   })
   let newClients = _.difference(sapClients, repeatedClients)
-  console.log("NEW CLIENTS: ", newClients.length)
+  console.log("\n\nNEW CLIENTS: ", newClients.length)
   console.log("TOTAL SAP CLIENTS: ", sapClients.length);
   console.log("REPEATED: ", repeatedClients.length)
 
   repeatedClients.forEach( client => {
     let crmClient = currentCrmClients.filter(c => { return c.rut === client.rut })
-    console.log("CRM CLIENTES FILTERED: ", crmClient.length)
+    // console.log("CRM CLIENTES FILTERED: ", crmClient.length)
     crmClient.forEach(async zohoClient => {
     if (zohoClient) {
       client.id = zohoClient.id

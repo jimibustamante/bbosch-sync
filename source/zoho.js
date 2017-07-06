@@ -6,15 +6,9 @@ const URL = require('url')
 const xmlBuilder = require('xmlbuilder')
 
 class ZohoApi {
-  constructor() {
-    console.log('Constructor! ', API_KEY)
-  }
-
   async getAccounts(from, to) {
     from = from || 1
     to = to || 200
-    console.log("GET CLIENTS!");
-    // console.log(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?version=2&newFormat=2&authtoken=${API_KEY}&scope=crmapi&fromIndex=${from}&toIndex=${to}&selectColumns=All`);
     let response = await request.get(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?newFormat=1&authtoken=${API_KEY}&scope=crmapi&fromIndex=${from}&toIndex=${to}&selectColumns=All`)
     response = this.parseCrmResponse(response)
     return response
@@ -23,7 +17,6 @@ class ZohoApi {
   async insertCrmClient(client) {
     let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/insertRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${client.buildCrmXml()}&duplicateCheck=1`)
     let response = await request.get(url)
-    console.log(response);
     return response
   }
 
@@ -35,7 +28,6 @@ class ZohoApi {
       let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/insertRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${xml}&version=4&duplicateCheck=1`)
       toInsertList.forEach(c => { c.updated = true })
       let response = await request.get(url)
-      console.log(response);
     } while (toInsertList.length === 10);
   }
 
@@ -82,9 +74,6 @@ class ZohoApi {
     let xml = xmlBuilder.create('Accounts')
     let i = 1
     list.forEach(client => {
-      if (client.rut === "96542940-9") {
-        console.log(client.rut)
-      }
       let row = xml.ele('row')
       row.att('no', i)
       row.ele('FL', {'val': 'Id'}, client.id)
