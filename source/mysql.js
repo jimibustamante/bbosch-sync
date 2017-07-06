@@ -27,7 +27,7 @@ class MysqlClient {
     return connection
   }
 
-  async getClients() { 
+  async getClients() {
     let connection = await this.connect()
     let [rows, fields] = await connection.execute('select * from tbl_int_credito');
     connection.end()
@@ -38,10 +38,17 @@ class MysqlClient {
     let connection = await this.connect()
     let [rows, fields] = await connection.execute('select * from tbl_int_bloqueo');
     console.log(rows);
+    connection.end()
     return rows
   }
 
+  async getKpis() {
+    let connection = await this.connect()
+    let [rows, fields] = await connection.execute('select * from tbl_int_kpi');
+    console.log(rows);
+    connection.end()
+    return rows
+  }
 }
-
 
 export default MysqlClient

@@ -36,7 +36,14 @@ class Client {
     this.facturacion = lock['FAKSD']
     this.condicionesPago = lock['ZTERM']
     this.texto = lock['TEXT1']
+  }
 
+  setKpi(kpi) {
+    console.log(kpi);
+    this.facturacionAnual = kpi['FACAA']
+    this.facturacionAcum = kpi['FACAC']
+    this.kgrAcum = kpi['KGSAC']
+    this.precioMedio = kpi['PRMAA']
   }
 
   buildUpdateXml() {
@@ -95,12 +102,24 @@ class Client {
             },
             {
               '@val': 'Condiciones de pago',
-              '#text': this.condicionesPago
+              '#text': this.texto
             },
-            // {
-            //   '@val': 'Texto condiciones de pago',
-            //   '#text': this.texto
-            // },
+            {
+              '@val': 'Facturación anual',
+              '#text': this.facturacionAnual
+            },
+            {
+              '@val': 'Facturación acumulada año',
+              '#text': this.facturacionAcum
+            },
+            {
+              '@val': 'Kgr acumulados / año',
+              '#text': this.kgrAcum
+            },
+            {
+              '@val': 'Precio promedio',
+              '#text': this.precioMedio
+            }
           ]
         }
       }

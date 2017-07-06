@@ -21,7 +21,7 @@ class ZohoApi {
   }
 
   async insertCrmClient(client) {
-    let url = encodeURI('https://crm.zoho.com/crm/private/xml/Accounts/insertRecords?authtoken='+ API_KEY + '&scope=crmapi&newFormat=1&xmlData=' + client.buildCrmXml() + '&duplicateCheck=1')
+    let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/insertRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${client.buildCrmXml()}&duplicateCheck=1`)
     let response = await request.get(url)
     console.log(response);
     return response

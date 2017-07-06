@@ -22,6 +22,7 @@ async function syncClients() {
 
   let bboschClients = await mysqlClient.getClients()
   let bboschLocks = await mysqlClient.getLocks()
+  let bboschKpis = await mysqlClient.getKpis()
   let sapClients = setClientList(bboschClients, 'sap').filter(c => { return c.rut.match(/\b\d{1,8}\-[K|k|0-9]/) })
   bboschLocks.forEach(lock => {
     let rut = lock['STCD1']
@@ -29,6 +30,16 @@ async function syncClients() {
     if (client) {
       console.log("ADDING LOCK TO CLIENT!")
       client.setLock(lock)
+      console.log(client)
+    }
+  })
+
+  bboschKpis.forEach(kpi => {
+    let rut = kpi['STCD1']
+    let client = sapClients.find(c => { return c.rut === rut })
+    if (client) {
+      console.log("ADDING KPI TO CLIENT!")
+      client.setKpi(kpi)
       console.log(client)
     }
   })
@@ -42,10 +53,6 @@ async function syncClients() {
   console.log("TOTAL SAP CLIENTS: ", sapClients.length);
   console.log("REPEATED: ", repeatedClients.length)
 
-
-  //console.log("\nSTARTING TO INSERT NEW CLIENTS")
-  //await api.insertClientList(newClients)
-
   repeatedClients.forEach( client => {
     let crmClient = currentCrmClients.filter(c => { return c.rut === client.rut })
     console.log("CRM CLIENTES FILTERED: ", crmClient.length)
@@ -58,11 +65,9 @@ async function syncClients() {
     })
   })
 
-
   console.log("\nSTARTING TO UPDATE EXISTING CLIENTS")
   await api.updateClientList(repeatedClients)
   console.log("\nUPDATE ENDED")
-
 }
 
 function setClientList (clients, origin) {
@@ -71,10 +76,6 @@ function setClientList (clients, origin) {
     list.push(new Client(client, origin))
   })
   return list
-}
-
-async syncLocks => {
-
 }
 
 syncClients()
