@@ -8,13 +8,19 @@ const mysqlClient = new MysqlClient()
 async function syncClients() {
   console.log("Start fetching CRM Clients...");
   let crmClients, currentCrmClients = [], from = 1, to = 200
+  let timeCounter = 0
+
+  let clock = setInterval(()=> {
+    timeCounter += 1
+  }, 1000)
+
   // Geting all clients. Api suports 200 rows per request
   do {
     crmClients = await api.getAccounts(from, to)
     currentCrmClients = _.union(currentCrmClients, setClientList(crmClients, 'crm'))
     from += 200
     to += 200
-  } while (crmClients.length !== 200);
+  } while (crmClients.length === 200);
 
   console.log("CURRENT CRM CLIENTS: ", currentCrmClients.length)
 
@@ -64,10 +70,11 @@ async function syncClients() {
      }
     })
   })
-
   console.log("\nSTARTING TO UPDATE EXISTING CLIENTS")
   await api.updateClientList(repeatedClients)
   console.log("\nUPDATE ENDED")
+  clearInterval(clock)
+  console.log(`\nTOTAL TIME: ${Math.trunc(timeCounter / 60)}mins ${timeCounter % 60}sec`)
 }
 
 function setClientList (clients, origin) {

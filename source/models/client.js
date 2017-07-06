@@ -10,9 +10,6 @@ class Client {
       this.creditoDeFacturas = params.CRTOT
       this.creditoTotal = params.CRCOM
       this.agotamiento = params.CRAGO
-      if (params.STCD1.replace(' ', '') === '96542940-9') {
-        console.log(params)
-      }
     }
     if (origin === 'crm' || !origin) {
       this.id = params['ACCOUNTID']
@@ -29,7 +26,6 @@ class Client {
   }
 
   setLock(lock) {
-    console.log(lock);
     this.sociedades = lock['SPERR']
     this.pedidos = lock['AUFSD']
     this.entregas = lock['LIFSD']
@@ -39,7 +35,6 @@ class Client {
   }
 
   setKpi(kpi) {
-    console.log(kpi);
     this.facturacionAnual = kpi['FACAA']
     this.facturacionAcum = kpi['FACAC']
     this.kgrAcum = kpi['KGSAC']
