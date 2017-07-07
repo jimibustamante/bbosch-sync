@@ -1,11 +1,14 @@
 import ZohoApi from './zoho.js'
 import MysqlClient from './mysql.js'
 import Client from './models/client.js'
+const schedule = require('node-schedule')
+const moment = require('node-moment')
 const _ = require('underscore-node')
 const api = new ZohoApi()
 const mysqlClient = new MysqlClient()
 
 async function syncClients() {
+  console.log(`START TASK AT: ${moment().format('LT')}`);
   console.log("Start fetching CRM Clients...");
   let crmClients, currentCrmClients = [], from = 1, to = 200
   let timeCounter = 0
@@ -75,6 +78,8 @@ async function syncClients() {
   console.log("\nUPDATE ENDED")
   clearInterval(clock)
   console.log(`\nTOTAL TIME: ${Math.trunc(timeCounter / 60)}mins ${timeCounter % 60}sec`)
+  console.log(`\nEND TASK AT: ${moment().format('LT')}`);
+
 }
 
 function setClientList (clients, origin) {
@@ -86,3 +91,7 @@ function setClientList (clients, origin) {
 }
 
 syncClients()
+// Schedule task
+let j = schedule.scheduleJob('0 7,10,14,17 * * *', () => {
+  syncClients()
+});
