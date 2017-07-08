@@ -40,17 +40,17 @@ class ZohoApi {
   async updateClientList(list) {
     let toUpdateList
     do {
-      toUpdateList = _.first(list.filter(c => {return !c.updated && !c.name.includes('&')}), 8)
+      toUpdateList = _.first(list.filter(c => {return !c.updated && !c.name.includes('&')}), 4)
       let xml = this.buildUpdateListXml(toUpdateList)
       let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/updateRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${xml}&version=4`)
       toUpdateList.forEach(c => { c.updated = true })
       let response = await request.get(url)
       if (response.includes("<error>")) {
-        //console.log(response);
+        console.log(response);
         console.log(toUpdateList)
       }
-      console.log(response)
-    } while (toUpdateList.length === 8);
+      // console.log(response)
+    } while (toUpdateList.length === 4);
   }
 
   buildInsertListXml(list) {
@@ -82,18 +82,17 @@ class ZohoApi {
       row.ele('FL', {'val': 'Id'}, client.id)
       row.ele('FL', {'val': 'RUT Cliente'}, client.rut)
       row.ele('FL', {'val': 'Cod SAP'}, client.codSap)
-      // row.ele('FL', {'val': 'Account Name'}, encodeURI(client.name))
       row.ele('FL', {'val': 'Account Name'}, client.name.replace('&','%26'))
       row.ele('FL', {'val': 'Crédito en Producción'}, client.creditoProduccion || 0)
       row.ele('FL', {'val': 'Limite de Crédito'}, client.limiteCredito || 0)
       row.ele('FL', {'val': 'Crédito en Facturas PP'}, client.creditoDeFacturas || 0)
       row.ele('FL', {'val': 'Comprometido Total'}, client.creditoTotal || 0)
       row.ele('FL', {'val': 'Grado de Agotamiento'}, parseInt(client.agotamiento) || 0)
-      row.ele('FL', {'val': 'Todas las sociedades'}, parseInt(client.sociedades) || 0)
-      row.ele('FL', {'val': 'Pedidos'}, parseInt(client.pedidos) || 0)
-      row.ele('FL', {'val': 'Entregas'}, parseInt(client.entregas) || 0)
-      row.ele('FL', {'val': 'Facturación'}, parseInt(client.facturacion) || 0)
-      row.ele('FL', {'val': 'Condiciones de pago'}, parseInt(client.texto) || 0)
+      row.ele('FL', {'val': 'Todas las sociedades'}, client.sociedades || 0)
+      row.ele('FL', {'val': 'Pedidos'}, client.pedidos || 0)
+      row.ele('FL', {'val': 'Entregas'}, client.entregas || 0)
+      row.ele('FL', {'val': 'Facturación'}, client.facturacion || 0)
+      row.ele('FL', {'val': 'Condiciones de pago'}, `${client.condicionesPago} ${client.texto}`)
       row.ele('FL', {'val': 'Facturación anual'}, parseInt(client.facturacionAnual) || 0)
       row.ele('FL', {'val': 'Facturación acumulada año'}, parseInt(client.facturacionAcum) || 0)
       row.ele('FL', {'val': 'Kgr acumulados / año'}, parseInt(client.kgrAcum) || 0)
