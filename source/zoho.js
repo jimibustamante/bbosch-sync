@@ -40,13 +40,17 @@ class ZohoApi {
   async updateClientList(list) {
     let toUpdateList
     do {
-      toUpdateList = _.first(list.filter(c => {return !c.updated}), 10)
+      toUpdateList = _.first(list.filter(c => {return !c.updated && !c.name.includes('&')}), 8)
       let xml = this.buildUpdateListXml(toUpdateList)
       let url = encodeURI(`https://crm.zoho.com/crm/private/xml/Accounts/updateRecords?authtoken=${API_KEY}&scope=crmapi&newFormat=1&xmlData=${xml}&version=4`)
       toUpdateList.forEach(c => { c.updated = true })
       let response = await request.get(url)
-      // console.log(response);
-    } while (toUpdateList.length === 10);
+      if (response.includes("<error>")) {
+        //console.log(response);
+        console.log(toUpdateList)
+      }
+      console.log(response)
+    } while (toUpdateList.length === 8);
   }
 
   buildInsertListXml(list) {
@@ -64,7 +68,6 @@ class ZohoApi {
       row.ele('FL', {'val': 'Crédito en Facturas PP'}, client.creditoDeFacturas || 0)
       row.ele('FL', {'val': 'Comprometido Total'}, client.creditoTotal || 0)
       row.ele('FL', {'val': 'Grado de Agotamiento'}, parseInt(client.agotamiento) || 0)
-
       i += 1
     })
     return xml.end().replace('<?xml version="1.0"?>','')
@@ -79,7 +82,8 @@ class ZohoApi {
       row.ele('FL', {'val': 'Id'}, client.id)
       row.ele('FL', {'val': 'RUT Cliente'}, client.rut)
       row.ele('FL', {'val': 'Cod SAP'}, client.codSap)
-      row.ele('FL', {'val': 'Account Name'}, client.name)
+      // row.ele('FL', {'val': 'Account Name'}, encodeURI(client.name))
+      row.ele('FL', {'val': 'Account Name'}, client.name.replace('&','%26'))
       row.ele('FL', {'val': 'Crédito en Producción'}, client.creditoProduccion || 0)
       row.ele('FL', {'val': 'Limite de Crédito'}, client.limiteCredito || 0)
       row.ele('FL', {'val': 'Crédito en Facturas PP'}, client.creditoDeFacturas || 0)

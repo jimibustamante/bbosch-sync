@@ -54,6 +54,9 @@ async function syncClients() {
   })
 
   let repeatedClients = sapClients.filter(client => {
+    if (client.rut === '76412220-8') {
+      console.log(client)
+    }
     let repeated =  currentCrmClients.find(c => { return c.rut === client.rut })
     if (repeated) { return true }  else { return repeated }
   })
