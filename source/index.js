@@ -25,17 +25,16 @@ async function syncClients() {
     to += 200
   } while (crmClients.length === 200);
 
-  console.log("CURRENT CRM CLIENTS: ", currentCrmClients.length)
-
-  console.log('\nFetching Clients...');
+  console.log("CURRENT CRM CLIENTS: ", crmClients.length)
+  console.log('Fetching Clients...');
   let bboschClients = await mysqlClient.getClients()
-  console.log('\nFetching Locks...');
+  console.log('Fetching Locks...');
   let bboschLocks = await mysqlClient.getLocks()
-  console.log('\nFetching KPIs...');
+  console.log('Fetching KPIs...');
   let bboschKpis = await mysqlClient.getKpis()
   let sapClients = setClientList(bboschClients, 'sap').filter(c => { return c.rut.match(/\b\d{1,8}\-[K|k|0-9]/) })
 
-  console.log('\nLocks merge...');
+  console.log('Locks merge...');
   bboschLocks.forEach(lock => {
     let rut = lock['STCD1']
     let client = sapClients.find(c => { return c.rut === rut })
@@ -44,7 +43,7 @@ async function syncClients() {
     }
   })
 
-  console.log('\nKPIs merge...');
+  console.log('KPIs merge...');
   bboschKpis.forEach(kpi => {
     let rut = kpi['STCD1']
     let client = sapClients.find(c => { return c.rut === rut })
@@ -54,14 +53,14 @@ async function syncClients() {
   })
 
   let repeatedClients = sapClients.filter(client => {
-    if (client.rut === '76412220-8') {
-      console.log(client)
-    }
+    // if (client.rut === '76412220-8') {
+    //   console.log(client)
+    // }
     let repeated =  currentCrmClients.find(c => { return c.rut === client.rut })
     if (repeated) { return true }  else { return repeated }
   })
   let newClients = _.difference(sapClients, repeatedClients)
-  console.log("\n\nNEW CLIENTS: ", newClients.length)
+  console.log("\nNEW CLIENTS: ", newClients.length)
   console.log("TOTAL SAP CLIENTS: ", sapClients.length);
   console.log("REPEATED: ", repeatedClients.length)
 

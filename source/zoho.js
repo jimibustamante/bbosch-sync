@@ -11,6 +11,7 @@ class ZohoApi {
     to = to || 200
     let response = await request.get(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?newFormat=1&authtoken=${API_KEY}&scope=crmapi&fromIndex=${from}&toIndex=${to}&selectColumns=All`)
     response = this.parseCrmResponse(response)
+    // console.log(response)
     return response
   }
 
@@ -81,7 +82,7 @@ class ZohoApi {
       row.att('no', i)
       row.ele('FL', {'val': 'Id'}, client.id)
       row.ele('FL', {'val': 'RUT Cliente'}, client.rut)
-      row.ele('FL', {'val': 'Cod SAP'}, client.codSap)
+      row.ele('FL', {'val': 'CoD SAP'}, client.codSap)
       row.ele('FL', {'val': 'Account Name'}, client.name.replace('&','%26'))
       row.ele('FL', {'val': 'Crédito en Producción'}, client.creditoProduccion || 0)
       row.ele('FL', {'val': 'Limite de Crédito'}, client.limiteCredito || 0)
@@ -97,8 +98,10 @@ class ZohoApi {
       row.ele('FL', {'val': 'Facturación acumulada año'}, parseInt(client.facturacionAcum) || 0)
       row.ele('FL', {'val': 'Kgr acumulados / año'}, parseInt(client.kgrAcum) || 0)
       row.ele('FL', {'val': 'Precio promedio'}, parseInt(client.precioMedio) || 0)
+      row.ele('FL', {'val': 'Bloqueo'}, client.bloqueo || false)
       i += 1
     })
+    // console.log(xml.end({pretty: true}))
     return xml.end().replace('<?xml version="1.0"?>','')
   }
 
