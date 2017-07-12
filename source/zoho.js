@@ -77,7 +77,12 @@ class ZohoApi {
   buildUpdateListXml(list) {
     let xml = xmlBuilder.create('Accounts')
     let i = 1
+    //let log = false
     list.forEach(client => {
+      // if (client.rut === '78618140-2') {
+      //   console.log(client)
+      //   log = true
+      } 
       let row = xml.ele('row')
       row.att('no', i)
       row.ele('FL', {'val': 'Id'}, client.id)
@@ -89,10 +94,10 @@ class ZohoApi {
       row.ele('FL', {'val': 'Crédito en Facturas PP'}, client.creditoDeFacturas || 0)
       row.ele('FL', {'val': 'Comprometido Total'}, client.creditoTotal || 0)
       row.ele('FL', {'val': 'Grado de Agotamiento'}, parseInt(client.agotamiento) || 0)
-      row.ele('FL', {'val': 'Todas las sociedades'}, client.sociedades || 0)
-      row.ele('FL', {'val': 'Pedidos'}, client.pedidos || 0)
-      row.ele('FL', {'val': 'Entregas'}, client.entregas || 0)
-      row.ele('FL', {'val': 'Facturación'}, client.facturacion || 0)
+      row.ele('FL', {'val': 'Todas las sociedades'}, client.sociedades && client.sociedades === 'X')
+      row.ele('FL', {'val': 'Pedidos'}, client.pedidos && client.pedidos === 'X')
+      row.ele('FL', {'val': 'Entregas'}, client.entregas && client.entregas === 'X')
+      row.ele('FL', {'val': 'Facturación'}, client.facturacion && client.facturacion === 'X')
       row.ele('FL', {'val': 'Condiciones de pago'}, `${client.condicionesPago} ${client.texto}`)
       row.ele('FL', {'val': 'Facturación anual'}, parseInt(client.facturacionAnual) || 0)
       row.ele('FL', {'val': 'Facturación acumulada año'}, parseInt(client.facturacionAcum) || 0)
@@ -101,7 +106,7 @@ class ZohoApi {
       row.ele('FL', {'val': 'Bloqueo'}, client.bloqueo || false)
       i += 1
     })
-    // console.log(xml.end({pretty: true}))
+    // if (log) {console.log(xml.end({pretty: true}))}
     return xml.end().replace('<?xml version="1.0"?>','')
   }
 
