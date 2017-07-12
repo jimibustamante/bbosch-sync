@@ -82,7 +82,7 @@ class ZohoApi {
       // if (client.rut === '78618140-2') {
       //   console.log(client)
       //   log = true
-      } 
+      // } 
       let row = xml.ele('row')
       row.att('no', i)
       row.ele('FL', {'val': 'Id'}, client.id)
