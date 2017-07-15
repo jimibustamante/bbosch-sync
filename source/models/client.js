@@ -23,6 +23,8 @@ class Client {
       this.agotamiento = params['Grado de agotamiento']
       this.ownerId = params['SMOWNERID']
       this.bloqueo = params['bloqueo']
+      this.condicionesPago = ['Condiciones de pago']
+      this.unlock()
     }
   }
 
@@ -34,6 +36,14 @@ class Client {
     this.condicionesPago = lock['ZTERM']
     this.texto = lock['TEXT1']
     this.bloqueo = true
+  }
+
+  unlock() {
+    this.sociedades = false
+    this.pedidos = false
+    this.entregas = false
+    this.facturacioin = false
+    this.bloqueo = false
   }
 
   setKpi(kpi) {

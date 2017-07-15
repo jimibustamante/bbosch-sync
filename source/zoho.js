@@ -103,7 +103,7 @@ class ZohoApi {
       row.ele('FL', {'val': 'Facturación acumulada año'}, parseInt(client.facturacionAcum) || 0)
       row.ele('FL', {'val': 'Kgr acumulados / año'}, parseInt(client.kgrAcum) || 0)
       row.ele('FL', {'val': 'Precio promedio'}, parseInt(client.precioMedio) || 0)
-      row.ele('FL', {'val': 'Bloqueo'}, client.bloqueo || false)
+      row.ele('FL', {'val': 'Bloqueo'}, client.bloqueo)
       i += 1
     })
     // if (log) {console.log(xml.end({pretty: true}))}
