@@ -93,7 +93,7 @@ function setClientList (clients, origin) {
   return list
 }
 
-// syncClients()
+ syncClients()
 // Schedule task
 mailer.sendErrorMessage('Error de test', {'test': true, 'hello': 'Hola!', 'num': 1233})
 let j = schedule.scheduleJob('0 7,10,14,17 * * *', () => {
