@@ -1,6 +1,7 @@
 import ZohoApi from './zoho.js'
 import MysqlClient from './mysql.js'
 import Client from './models/client.js'
+import mailer from './mailer.js'
 const schedule = require('node-schedule')
 const moment = require('node-moment')
 const _ = require('underscore-node')
@@ -94,6 +95,7 @@ function setClientList (clients, origin) {
 
 // syncClients()
 // Schedule task
+mailer.sendErrorMessage('Error de test', {'test': true, 'hello': 'Hola!', 'num': 1233})
 let j = schedule.scheduleJob('0 7,10,14,17 * * *', () => {
   syncClients()
 });

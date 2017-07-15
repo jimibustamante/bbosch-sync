@@ -1,4 +1,5 @@
 require('dotenv/config')
+import mailer from './mailer.js'
 const API_KEY= process.env.ZOHO_API_TOKEN
 const request = require('request-promise')
 const _ = require('underscore-node')
