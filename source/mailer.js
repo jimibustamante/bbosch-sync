@@ -37,10 +37,10 @@ function errorTemplate (message, object) {
   return `<h3>Se ha registado un error durante la sincronización</h3>
     <ul>
       <li> Mensaje de error: ${message}</li>
-      <li> Referencia: ${object}</li>
+      <li> Referencia: ${JSON.stringify(object)}</li>
     </ul>`
 }
 
 export default {
-  sendErrorMessage 
+  sendErrorMessage
 }

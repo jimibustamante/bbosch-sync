@@ -10,10 +10,14 @@ class ZohoApi {
   async getAccounts(from, to) {
     from = from || 1
     to = to || 200
-    let response = await request.get(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?newFormat=1&authtoken=${API_KEY}&scope=crmapi&fromIndex=${from}&toIndex=${to}&selectColumns=All`)
-    response = this.parseCrmResponse(response)
-    // console.log(response)
-    return response
+    try {
+      let response = await request.get(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?newFormat=1&authtoken=${API_KEY}&scope=crmapi&fromIndex=${from}&toIndex=${to}&selectColumns=All`)
+      response = this.parseCrmResponse(response)
+      return response
+    } catch (error) {
+      console.log(error);
+      mailer.sendErrorMessage('Error: getAccounts ', error)
+    }
   }
 
   async insertCrmClient(client) {
