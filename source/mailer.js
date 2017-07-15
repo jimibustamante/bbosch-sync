@@ -1,4 +1,6 @@
 'use strict'
+const MAIL_USER = process.env.MAIL_USER
+const MAIL_PASS = process.env.MAIL_PASS
 const nodemailer = require('nodemailer')
 // create reusable transporter object using the default SMTP transport
 let transporter = nodemailer.createTransport({
@@ -6,8 +8,8 @@ let transporter = nodemailer.createTransport({
     port: 465,
     secure: true, // secure:true for port 465, secure:false for port 587
     auth: {
-        user: 'jbustamante@santiagosystems.com',
-        pass: 'winn1379'
+      user: MAIL_USER,
+      pass: MAIL_PASS
     }
 })
 
