@@ -83,7 +83,7 @@ class ZohoApi {
       // if (client.rut === '78618140-2') {
       //   console.log(client)
       //   log = true
-      // } 
+      // }
       let row = xml.ele('row')
       row.att('no', i)
       row.ele('FL', {'val': 'Id'}, client.id)
@@ -99,6 +99,7 @@ class ZohoApi {
       row.ele('FL', {'val': 'Pedidos'}, client.pedidos && client.pedidos === 'X')
       row.ele('FL', {'val': 'Entregas'}, client.entregas && client.entregas === 'X')
       row.ele('FL', {'val': 'Facturación'}, client.facturacion && client.facturacion === 'X')
+      row.ele('FL', {'val': 'Todas las áreas de venta'}, client.areasVenta && client.areasVenta === 'X')
       row.ele('FL', {'val': 'Condiciones de pago'}, `${client.condicionesPago} ${client.texto}`)
       row.ele('FL', {'val': 'Facturación anual'}, parseInt(client.facturacionAnual) || 0)
       row.ele('FL', {'val': 'Facturación acumulada año'}, parseInt(client.facturacionAcum) || 0)

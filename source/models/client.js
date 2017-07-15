@@ -35,6 +35,7 @@ class Client {
     this.facturacion = lock['FAKSD']
     this.condicionesPago = lock['ZTERM']
     this.texto = lock['TEXT1']
+    this.areasVenta = lock['CASSD']
     this.bloqueo = true
   }
 
