@@ -1,16 +1,17 @@
-require('dotenv/config')
+require('dotenv').config({path: '/home/ssystems/apps/bbosch-sync/.env'})
 import mailer from './mailer.js'
 const API_KEY= process.env.ZOHO_API_TOKEN
 const request = require('request-promise')
 const _ = require('underscore-node')
 const URL = require('url')
 const xmlBuilder = require('xmlbuilder')
-
+console.log(process.env)
 class ZohoApi {
   async getAccounts(from, to) {
     from = from || 1
     to = to || 200
     try {
+      console.log(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?newFormat=1&authtoken=${API_KEY}&scope=crmapi&fromIndex=${from}&toIndex=${to}&selectColumns=All`)
       let response = await request.get(`https://crm.zoho.com/crm/private/json/Accounts/getRecords?newFormat=1&authtoken=${API_KEY}&scope=crmapi&fromIndex=${from}&toIndex=${to}&selectColumns=All`)
       response = this.parseCrmResponse(response)
       return response
@@ -84,31 +85,27 @@ class ZohoApi {
     let i = 1
     //let log = false
     list.forEach(client => {
-      // if (client.rut === '78618140-2') {
-      //   console.log(client)
-      //   log = true
-      // }
       let row = xml.ele('row')
       row.att('no', i)
       row.ele('FL', {'val': 'Id'}, client.id)
       row.ele('FL', {'val': 'RUT Cliente'}, client.rut)
       row.ele('FL', {'val': 'CoD SAP'}, client.codSap)
       row.ele('FL', {'val': 'Account Name'}, client.name.replace('&','%26'))
-      row.ele('FL', {'val': 'Crédito en Producción'}, client.creditoProduccion || 0)
-      row.ele('FL', {'val': 'Limite de Crédito'}, client.limiteCredito || 0)
-      row.ele('FL', {'val': 'Crédito en Facturas PP'}, client.creditoDeFacturas || 0)
+      row.ele('FL', {'val': 'Crédito en Producción'}, client.creditoProduccion || '')
+      row.ele('FL', {'val': 'Limite de Crédito'}, client.limiteCredito || '')
+      row.ele('FL', {'val': 'Crédito en Facturas PP'}, client.creditoDeFacturas || '')
       row.ele('FL', {'val': 'Comprometido Total'}, client.creditoTotal || 0)
-      row.ele('FL', {'val': 'Grado de Agotamiento'}, parseInt(client.agotamiento) || 0)
+      row.ele('FL', {'val': 'Grado de Agotamiento'}, parseInt(client.agotamiento) || '')
       row.ele('FL', {'val': 'Todas las sociedades'}, client.sociedades && client.sociedades === 'X')
       row.ele('FL', {'val': 'Pedidos'}, client.pedidos && client.pedidos === 'X')
       row.ele('FL', {'val': 'Entregas'}, client.entregas && client.entregas === 'X')
       row.ele('FL', {'val': 'Facturación'}, client.facturacion && client.facturacion === 'X')
       row.ele('FL', {'val': 'Todas las áreas de venta'}, client.areasVenta && client.areasVenta === 'X')
       row.ele('FL', {'val': 'Condiciones de pago'}, `${client.condicionesPago} ${client.texto}`)
-      row.ele('FL', {'val': 'Facturación anual'}, parseInt(client.facturacionAnual) || 0)
-      row.ele('FL', {'val': 'Facturación acumulada año'}, parseInt(client.facturacionAcum) || 0)
-      row.ele('FL', {'val': 'Kgr acumulados / año'}, parseInt(client.kgrAcum) || 0)
-      row.ele('FL', {'val': 'Precio promedio'}, parseInt(client.precioMedio) || 0)
+      row.ele('FL', {'val': 'Facturación anual'}, parseInt(client.facturacionAnual) || '')
+      row.ele('FL', {'val': 'Facturación acumulada año'}, parseInt(client.facturacionAcum) || '')
+      row.ele('FL', {'val': 'Kgr acumulados / año'}, parseInt(client.kgrAcum) || '')
+      row.ele('FL', {'val': 'Precio promedio'}, parseInt(client.precioMedio) || '')
       row.ele('FL', {'val': 'Bloqueo'}, client.bloqueo)
       i += 1
     })

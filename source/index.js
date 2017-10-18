@@ -41,7 +41,10 @@ async function syncClients() {
     let client = sapClients.find(c => { return c.rut === rut })
     if (client) {
       client.setLock(lock)
+    } else { 
+      sapClients.push(new Client(lock, 'sap'))
     }
+
   })
 
   console.log('KPIs merge...');
@@ -50,13 +53,12 @@ async function syncClients() {
     let client = sapClients.find(c => { return c.rut === rut })
     if (client) {
       client.setKpi(kpi)
+    } else { 
+      sapClients.push(new Client(kpi, 'sap'))
     }
   })
 
   let repeatedClients = sapClients.filter(client => {
-    // if (client.rut === '76412220-8') {
-    //   console.log(client)
-    // }
     let repeated =  currentCrmClients.find(c => { return c.rut === client.rut })
     if (repeated) { return true }  else { return repeated }
   })
@@ -93,7 +95,7 @@ function setClientList (clients, origin) {
   return list
 }
 
- // syncClients()
+ syncClients()
 // mailer.sendErrorMessage('Error de test', {'test': true, 'hello': 'Hola!', 'num': 1233})
 
 // Schedule task

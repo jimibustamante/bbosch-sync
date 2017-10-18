@@ -10,6 +10,8 @@ class Client {
       this.creditoDeFacturas = params.CRTOT
       this.creditoTotal = params.CRCOM
       this.agotamiento = params.CRAGO
+      this.setLock(params)
+      this.setKpi(params)
     }
     if (origin === 'crm' || !origin) {
       this.id = params['ACCOUNTID']

@@ -20,7 +20,7 @@ class MysqlClient {
       host: this.data.host,
       port: this.data.port,
       user: this.data.user,
-      //password: this.data.pass,
+      password: this.data.pass,
       debug: false,
       database: this.data.name
     })
